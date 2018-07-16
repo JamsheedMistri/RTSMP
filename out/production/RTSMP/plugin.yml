@@ -1,0 +1,4 @@
+name: RTSMP
+version: 1.0
+author: Mistri
+main: com.jmistri.rtsmp.Main
