@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -47,22 +48,19 @@ public class SilkTouchSpawner implements Listener {
         if (event.getBlockPlaced().getType() == Material.MOB_SPAWNER) {
             NBTItem stack = new NBTItem(event.getItemInHand());
 
-            String type = "pig";
+            String type = null;
 
             try {
                 type = stack.getString("mob");
             } catch (Exception e) {}
 
-            BlockState blockState = event.getBlockPlaced().getState();
-            CreatureSpawner spawner = ((CreatureSpawner) blockState);
-
-            for (EntityType e : EntityType.values()) {
-                if (e.toString().equalsIgnoreCase(type)) {
-                    spawner.setSpawnedType(e);
-                }
+            if (type != null) {
+                BlockState blockState = event.getBlockPlaced().getState();
+                CreatureSpawner spawner = ((CreatureSpawner) blockState);
+                EntityType entityType = EntityType.valueOf(type);
+                spawner.setSpawnedType(entityType);
+                blockState.update();
             }
-
-            blockState.update();
         }
     }
 }

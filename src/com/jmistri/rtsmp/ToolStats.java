@@ -10,15 +10,29 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.print.DocFlavor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class ToolStats implements Listener {
-    static Material[] pickaxes = new Material[]{Material.WOOD_PICKAXE, Material.STONE_PICKAXE, Material.GOLD_PICKAXE, Material.IRON_PICKAXE, Material.DIAMOND_PICKAXE};
-    static Material[] weapons = new Material[]{Material.WOOD_SWORD, Material.STONE_SWORD, Material.GOLD_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.BOW};
+    static ArrayList<Material> pickaxes = new ArrayList<>();
+    static {
+        pickaxes.add(Material.WOOD_PICKAXE);
+        pickaxes.add(Material.STONE_PICKAXE);
+        pickaxes.add(Material.GOLD_PICKAXE);
+        pickaxes.add(Material.IRON_PICKAXE);
+        pickaxes.add(Material.DIAMOND_PICKAXE);
+    }
+
+    static ArrayList<Material> weapons = new ArrayList<>();
+    static {
+        weapons.add(Material.WOOD_SWORD);
+        weapons.add(Material.STONE_SWORD);
+        weapons.add(Material.GOLD_SWORD);
+        weapons.add(Material.IRON_SWORD);
+        weapons.add(Material.DIAMOND_SWORD);
+        weapons.add(Material.BOW);
+    }
 
     static HashMap<Material, String> pickaxe_blocks = new HashMap<>();
     static
@@ -94,7 +108,7 @@ public class ToolStats implements Listener {
             return;
         }
 
-        if (Arrays.asList(pickaxes).contains(item.getType()) && pickaxe_blocks.containsKey(event.getBlock().getType())) {
+        if (pickaxes.contains(item.getType()) && pickaxe_blocks.containsKey(event.getBlock().getType())) {
             List<String> lore = item.getItemMeta().getLore();
 
             boolean foundMatch = false;
@@ -142,7 +156,7 @@ public class ToolStats implements Listener {
             return;
         }
 
-        if (Arrays.asList(weapons).contains(item.getType())) {
+        if (weapons.contains(item.getType())) {
             List<String> lore = item.getItemMeta().getLore();
 
             boolean foundMatch = false;
