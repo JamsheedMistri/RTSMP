@@ -1,6 +1,9 @@
 package com.jmistri.rtsmp;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,10 +13,30 @@ public class ZombieVillagerSpawner implements Listener {
 
     @EventHandler
     public void onSpawnerSpawn(SpawnerSpawnEvent event) {
-        if (((CreatureSpawner) event.getSpawner().getBlock().getState()).getSpawnedType().equals(EntityType.ZOMBIE) && Math.random() < 0.05) {
-            event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.ZOMBIE_VILLAGER);
-            event.setCancelled(true);
+
+        //Get spawner from event
+        CreatureSpawner spawner = event.getSpawner();
+
+        //Check if the spawner is a zombie spawner
+        if(spawner.getSpawnedType().equals(EntityType.ZOMBIE) ){
+
+            //Get a random number between 0 and 19 for 5% chance
+            int rand = (int)(Math.random()*20);
+            if(rand == 0) {
+                Entity spawnee = event.getEntity();
+
+                //Get the location of the zombie
+                Location loc = spawnee.getLocation();
+
+                //Remove the zombie
+                spawnee.remove();
+
+                //Get the world
+                World w = spawner.getWorld();
+
+                //Spawn a zombie villager
+                w.spawnEntity(loc, EntityType.ZOMBIE_VILLAGER);
+            }
         }
     }
-
 }
