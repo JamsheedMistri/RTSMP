@@ -1,11 +1,17 @@
 package com.jmistri.rtsmp;
 
-import org.bukkit.ChatColor;
+import de.tr7zw.itemnbtapi.NBTItem;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Main extends JavaPlugin {
     @Override
@@ -16,7 +22,30 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ToolStats(), this);
         getServer().getPluginManager().registerEvents(new ZombieVillagerSpawner(), this);
         getServer().getPluginManager().registerEvents(new XPBottle(), this);
-        getServer().getPluginManager().enablePlugin(new Recipies());
+        getServer().getPluginManager().registerEvents(new XPBucket(), this);
+
+        ItemStack bucket = new ItemStack(Material.BUCKET);
+        ItemMeta im = bucket.getItemMeta();
+        List<String> lore = new ArrayList<>();
+
+        Glow glow = new Glow(100);
+        im.addEnchant(glow, 1, true);
+
+        lore.add(ChatColor.GRAY + "Experience " + ChatColor.DARK_GRAY + "-" + ChatColor.GREEN + " 0");
+        lore.add(ChatColor.GRAY + "Total Bottle Capacity " + ChatColor.DARK_GRAY + "-" + ChatColor.GREEN + " 160");
+
+        // Write lore data to partially filled bottle
+        im.setLore(lore);
+        im.setDisplayName(ChatColor.RESET + "Empty XP Bucket");
+        bucket.setItemMeta(im);
+
+        NamespacedKey key = new NamespacedKey(this, this.getDescription().getName());
+        ShapedRecipe recipe = new ShapedRecipe(key, bucket);
+
+        //E and S just marks the material, any letter is okay. A space means no item in that slot.
+        recipe.shape("   ", "I I", " I ");
+        recipe.setIngredient('I', Material.IRON_BLOCK);
+        Bukkit.addRecipe(recipe);
     }
 
     @Override
@@ -39,7 +68,7 @@ public class Main extends JavaPlugin {
         }
         catch (IllegalArgumentException e){
         }
-        catch(Exception e){
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

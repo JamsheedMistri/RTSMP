@@ -75,13 +75,11 @@ public class XPBottle implements Listener {
                 ItemStack potion = new ItemStack(Material.POTION);
                 PotionMeta pm = (PotionMeta) potion.getItemMeta();
 
-//                pm.setBasePotionData(new PotionData(PotionType.JUMP));
-//                pm.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                 Glow glow = new Glow(100);
                 pm.addEnchant(glow, 1, true);
 
 
-                pm.setColor(Color.AQUA);
+                pm.setColor(Color.LIME);
 
                 // Create a partially filled bottle
                 replacementLore.add(ChatColor.GRAY + "Experience " + ChatColor.DARK_GRAY + "-" + ChatColor.GREEN + " " + XPGained);
