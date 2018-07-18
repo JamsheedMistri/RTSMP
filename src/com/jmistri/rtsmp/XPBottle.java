@@ -2,14 +2,21 @@ package com.jmistri.rtsmp;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -22,48 +29,66 @@ public class XPBottle implements Listener {
 
         // Event information
         Player player = event.getPlayer();
-        ItemStack item = player.getInventory().getItemInMainHand();
+        boolean mainHand;
+        boolean refill = false;
 
-        if (!item.getType().equals(Material.GLASS_BOTTLE)) {
+        if (player.getInventory().getItemInMainHand().getType().equals(Material.GLASS_BOTTLE)) {
+            mainHand = true;
+        } else if (player.getInventory().getItemInOffHand().getType().equals(Material.GLASS_BOTTLE)) {
+            mainHand = false;
+        } else if (player.getInventory().getItemInMainHand().getType().equals(Material.POTION)) {
+            mainHand = true;
+            refill = true;
+        } else if (player.getInventory().getItemInOffHand().getType().equals(Material.POTION)) {
+            mainHand = false;
+            refill = true;
+        } else {
             return;
         }
 
         // Either Stack of bottles or partially full
-        List<String> lore = item.getItemMeta().getLore();
+        List<String> lore = getBottle(player.getInventory(), mainHand).getItemMeta().getLore();
         int remainingXP = 0;
 
-        if (lore == null) {
+        if (!refill) {
             // Glass Bottles (no Lore)
 
             List<String> replacementLore = new ArrayList<>();
             int XPGained = event.getAmount();
 
             // Subtract XP and create new bottles until there isnt enough to create a full bottle
-            while (XPGained >= 8 && player.getInventory().getItemInMainHand().getAmount() > 0) {
+            while (XPGained >= 8 && getBottle(player.getInventory(), mainHand).getAmount() > 0) {
                 // Remove one item from main hand
-                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+                getBottle(player.getInventory(), mainHand).setAmount(getBottle(player.getInventory(), mainHand).getAmount() - 1);
 
                 // Create XP bottles
                 ItemStack newXPBottle = new ItemStack(Material.EXP_BOTTLE, 1);
                 player.getInventory().addItem(newXPBottle);
                 XPGained -= 8;
+
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 0.5F);
             }
 
-            // Create a partially filled bottle if there is remaining xp
-            if (XPGained > 0 && player.getInventory().getItemInMainHand().getAmount() > 0) {
-                ItemStack replacementBottle = new ItemStack(Material.GLASS_BOTTLE, 1);
+            // Create a partially filled bottle if there is remaining XP
+            if (XPGained > 0 && getBottle(player.getInventory(), mainHand).getAmount() > 0) {
+                ItemStack potion = new ItemStack(Material.POTION);
+                PotionMeta pm = (PotionMeta) potion.getItemMeta();
+
+                pm.setBasePotionData(new PotionData(PotionType.JUMP));
+                pm.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
                 // Create a partially filled bottle
-                replacementLore.add(ChatColor.GREEN + "Experience " + ChatColor.GRAY + "- " + XPGained);
+                replacementLore.add(ChatColor.GRAY + "Experience " + ChatColor.DARK_GRAY + "-" + ChatColor.GREEN + " " + XPGained);
+                replacementLore.add(ChatColor.GRAY + "Total Bottle Capacity " + ChatColor.DARK_GRAY + "-" + ChatColor.GREEN + " 8");
 
                 // Write lore data to partially filled bottle
-                ItemMeta im = replacementBottle.getItemMeta();
-                im.setLore(replacementLore);
-                replacementBottle.setItemMeta(im);
+                pm.setLore(replacementLore);
+                pm.setDisplayName(ChatColor.RESET + "Partially Filled XP Bottle");
+                potion.setItemMeta(pm);
 
-                int bottlesRemaining = player.getInventory().getItemInMainHand().getAmount() - 1;
+                int bottlesRemaining = getBottle(player.getInventory(), mainHand).getAmount() - 1;
 
-                player.getInventory().setItemInMainHand(replacementBottle);
+                setBottle(player.getInventory(), mainHand, potion);
 
                 // Add the replacement bottle
                 if (bottlesRemaining > 0) {
@@ -71,6 +96,8 @@ public class XPBottle implements Listener {
                 }
 
                 XPGained = 0;
+
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.5F);
             }
 
             remainingXP = XPGained;
@@ -80,25 +107,24 @@ public class XPBottle implements Listener {
 
             int amountStored = Integer.parseInt(brokenLore[brokenLore.length - 1]);
 
-            if (event.getAmount() + amountStored < 8) {
-                lore.set(0, ChatColor.GREEN + "Experience " + ChatColor.GRAY + "- " + (amountStored + event.getAmount()));
+            if (event.getAmount() + amountStored <= 7) {
+                lore.set(0, ChatColor.GRAY + "Experience " + ChatColor.DARK_GRAY + "-" + ChatColor.GREEN + " " + (amountStored + event.getAmount()));
 
                 // Write lore data to partially filled bottle
-                ItemMeta im = item.getItemMeta();
+                ItemMeta im = getBottle(player.getInventory(), mainHand).getItemMeta();
                 im.setLore(lore);
-                item.setItemMeta(im);
+                getBottle(player.getInventory(), mainHand).setItemMeta(im);
 
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.5F);
             } else {
-                // Remove item
-                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-
                 // Add new item
                 ItemStack newXPBottle = new ItemStack(Material.EXP_BOTTLE, 1);
-                player.getInventory().addItem(newXPBottle);
+                setBottle(player.getInventory(), mainHand, newXPBottle);
 
                 // Store remaining xp to add to player's bar
                 remainingXP = event.getAmount() - 8 + amountStored;
 
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 0.5F);
             }
         }
 
@@ -110,7 +136,6 @@ public class XPBottle implements Listener {
         } else {
             setActualXP(player, remainingXP);
         }
-
     }
 
     private void setActualXP(Player player, int XP) {
@@ -129,4 +154,26 @@ public class XPBottle implements Listener {
         player.setExp((float) XP / (float) player.getExpToLevel());
     }
 
+    private ItemStack getBottle(PlayerInventory inventory, boolean mainHand) {
+        return mainHand ? inventory.getItemInMainHand() : inventory.getItemInOffHand();
+    }
+
+    private void setBottle(PlayerInventory inventory, boolean mainHand, ItemStack item) {
+        if (mainHand) {
+            inventory.setItemInMainHand(item);
+        } else {
+            inventory.setItemInOffHand(item);
+        }
+    }
+
+    @EventHandler
+    public void onDrink(PlayerItemConsumeEvent event) {
+        if (event.getItem().getItemMeta().getLore() == null) {
+            return;
+        }
+
+        if (event.getItem().getItemMeta().getLore().get(0).split(" ")[0].equals(ChatColor.GRAY + "Experience")) {
+            event.setCancelled(true);
+        }
+    }
 }
