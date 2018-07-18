@@ -16,8 +16,9 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-
+import org.bukkit.Color;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +75,13 @@ public class XPBottle implements Listener {
                 ItemStack potion = new ItemStack(Material.POTION);
                 PotionMeta pm = (PotionMeta) potion.getItemMeta();
 
-                pm.setBasePotionData(new PotionData(PotionType.JUMP));
-                pm.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+//                pm.setBasePotionData(new PotionData(PotionType.JUMP));
+//                pm.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                Glow glow = new Glow(100);
+                pm.addEnchant(glow, 1, true);
+
+
+                pm.setColor(Color.AQUA);
 
                 // Create a partially filled bottle
                 replacementLore.add(ChatColor.GRAY + "Experience " + ChatColor.DARK_GRAY + "-" + ChatColor.GREEN + " " + XPGained);
