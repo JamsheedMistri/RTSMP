@@ -12,6 +12,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SilkTouchSpawner(), this);
         getServer().getPluginManager().registerEvents(new ToolStats(), this);
         getServer().getPluginManager().registerEvents(new ZombieVillagerSpawner(), this);
+        getServer().getPluginManager().registerEvents(new XPBottle(), this);
     }
 
     @Override
