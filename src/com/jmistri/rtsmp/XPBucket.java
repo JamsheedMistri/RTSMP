@@ -159,16 +159,26 @@ public class XPBucket implements Listener {
 
     @EventHandler
     public void onPlace(PlayerBucketEmptyEvent event) {
-        if (event.getItemStack().getItemMeta().getLore() == null) {
+        if (!event.getBucket().equals(Material.WATER_BUCKET)) {
             return;
         }
 
-        if (isBucket(event.getItemStack())) {
-            event.setCancelled(true);
+        if (event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.WATER_BUCKET)) {
+            if (isBucket(event.getPlayer().getInventory().getItemInMainHand())) {
+                event.setCancelled(true);
+                event.getPlayer().getInventory().setItemInMainHand(event.getPlayer().getInventory().getItemInMainHand());
+            }
+        } else {
+            if (isBucket(event.getPlayer().getInventory().getItemInOffHand())) {
+                event.setCancelled(true);
+                event.getPlayer().getInventory().setItemInOffHand(event.getPlayer().getInventory().getItemInOffHand());
+            }
         }
     }
 
     private boolean isBucket(ItemStack bucket) {
+        if (bucket.getItemMeta() == null) return false;
+        if (bucket.getItemMeta().getLore() == null) return false;
         return bucket.getItemMeta().getLore().get(0).split(" ")[0].equals(ChatColor.GRAY + "Experience");
     }
 
