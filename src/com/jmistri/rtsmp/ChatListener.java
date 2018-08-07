@@ -7,6 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -14,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatListener implements Listener {
+
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         // Change format
@@ -28,7 +33,7 @@ public class ChatListener implements Listener {
 
         for (int i = 0; i < brokenMessage.length; i ++) {
             Player player = Bukkit.getPlayer(brokenMessage[i]);
-            if (player != null) {
+            if (player != null && player.getDisplayName().equals(brokenMessage[i])) {
                 brokenMessage[i] = ChatColor.GOLD + brokenMessage[i] + ChatColor.RESET;
 
                 if (!completedPings.contains(brokenMessage[i])) {

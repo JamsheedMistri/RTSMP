@@ -1,6 +1,5 @@
 package com.jmistri.rtsmp;
 
-import de.tr7zw.itemnbtapi.NBTItem;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -10,7 +9,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Main extends JavaPlugin {
@@ -42,7 +40,6 @@ public class Main extends JavaPlugin {
         NamespacedKey key = new NamespacedKey(this, this.getDescription().getName());
         ShapedRecipe recipe = new ShapedRecipe(key, bucket);
 
-        //E and S just marks the material, any letter is okay. A space means no item in that slot.
         recipe.shape("   ", "I I", " I ");
         recipe.setIngredient('I', Material.IRON_BLOCK);
         Bukkit.addRecipe(recipe);
