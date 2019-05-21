@@ -12,21 +12,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends JavaPlugin {
+    NamespacedKey key;
+
     @Override
     public void onEnable() {
+        key = new NamespacedKey(this, this.getDescription().getName());
+
         registerGlow();
         getServer().getPluginManager().registerEvents(new ChatListener(), this);
         getServer().getPluginManager().registerEvents(new SilkTouchSpawner(), this);
         getServer().getPluginManager().registerEvents(new ToolStats(), this);
         getServer().getPluginManager().registerEvents(new ZombieVillagerSpawner(), this);
-        getServer().getPluginManager().registerEvents(new XPBottle(), this);
-        getServer().getPluginManager().registerEvents(new XPBucket(), this);
+        getServer().getPluginManager().registerEvents(new XPBottle(key), this);
+        getServer().getPluginManager().registerEvents(new XPBucket(key), this);
 
         ItemStack bucket = new ItemStack(Material.BUCKET);
         ItemMeta im = bucket.getItemMeta();
         List<String> lore = new ArrayList<>();
 
-        Glow glow = new Glow(100);
+        Glow glow = new Glow(key);
         im.addEnchant(glow, 1, true);
 
         lore.add(ChatColor.GRAY + "Experience " + ChatColor.DARK_GRAY + "-" + ChatColor.GREEN + " 0");
@@ -37,7 +41,6 @@ public class Main extends JavaPlugin {
         im.setDisplayName(ChatColor.RESET + "Empty XP Bucket");
         bucket.setItemMeta(im);
 
-        NamespacedKey key = new NamespacedKey(this, this.getDescription().getName());
         ShapedRecipe recipe = new ShapedRecipe(key, bucket);
 
         recipe.shape("   ", "I I", " I ");
@@ -60,7 +63,7 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
         try {
-            Glow glow = new Glow(100);
+            Glow glow = new Glow(key);
             Enchantment.registerEnchantment(glow);
         }
         catch (IllegalArgumentException e){

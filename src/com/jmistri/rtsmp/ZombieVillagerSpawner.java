@@ -21,7 +21,7 @@ public class ZombieVillagerSpawner implements Listener {
         if(spawner.getSpawnedType().equals(EntityType.ZOMBIE) ){
 
             //Get a random number between 0 and 19 for 5% chance
-            int rand = (int)(Math.random()*20);
+            int rand = (int)(Math.random() * 20);
             if(rand == 0) {
                 Entity spawnee = event.getEntity();
 

@@ -1,10 +1,7 @@
 package com.jmistri.rtsmp;
 
 import de.tr7zw.itemnbtapi.NBTItem;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XPBucket implements Listener {
+    NamespacedKey key;
+
+    public XPBucket(NamespacedKey key) {
+        this.key = key;
+    }
+
 
     @EventHandler
     public void onXPChange(PlayerExpChangeEvent event) {
@@ -57,7 +60,7 @@ public class XPBucket implements Listener {
             // Subtract XP and create new bottles until there isnt enough to create a full bottle
             if (XPGained >= 160) {
                 // Remove one item from main hand
-                setBucket(player.getInventory(), mainHand, new ItemStack(Material.EXP_BOTTLE, 20));
+                setBucket(player.getInventory(), mainHand, new ItemStack(Material.EXPERIENCE_BOTTLE, 20));
 
                 XPGained -= 160;
 
@@ -68,7 +71,7 @@ public class XPBucket implements Listener {
                 ItemStack bucket = new ItemStack(Material.WATER_BUCKET);
                 ItemMeta im = bucket.getItemMeta();
 
-                Glow glow = new Glow(100);
+                Glow glow = new Glow(key);
                 im.addEnchant(glow, 1, true);
 
                 // Create a partially filled bottle
@@ -109,7 +112,7 @@ public class XPBucket implements Listener {
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.25F);
             } else {
                 // Add new item
-                ItemStack newXPBottle = new ItemStack(Material.EXP_BOTTLE, 20);
+                ItemStack newXPBottle = new ItemStack(Material.EXPERIENCE_BOTTLE, 20);
                 setBucket(player.getInventory(), mainHand, newXPBottle);
 
                 // Store remaining xp to add to player's bar

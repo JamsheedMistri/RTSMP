@@ -1,13 +1,14 @@
 package com.jmistri.rtsmp;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 
 public class Glow extends Enchantment {
 
-    public Glow(int id) {
-        super(id);
+    public Glow(NamespacedKey key) {
+        super(key);
     }
 
     @Override

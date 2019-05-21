@@ -20,13 +20,13 @@ public class SilkTouchSpawner implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.getBlock().getType() == Material.MOB_SPAWNER && event.getPlayer().getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
+        if (event.getBlock().getType() == Material.SPAWNER && event.getPlayer().getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
             event.setExpToDrop(0);
 
             CreatureSpawner cs = (CreatureSpawner) event.getBlock().getState();
             EntityType type = cs.getSpawnedType();
 
-            NBTItem stack = new NBTItem(new ItemStack(Material.MOB_SPAWNER));
+            NBTItem stack = new NBTItem(new ItemStack(Material.SPAWNER));
             stack.setString("mob", type.toString());
 
             String formattedType = type.toString().toLowerCase();
@@ -45,7 +45,7 @@ public class SilkTouchSpawner implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.getBlockPlaced().getType() == Material.MOB_SPAWNER) {
+        if (event.getBlockPlaced().getType() == Material.SPAWNER) {
             NBTItem stack = new NBTItem(event.getItemInHand());
 
             String type = null;

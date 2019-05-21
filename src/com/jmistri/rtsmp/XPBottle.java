@@ -1,8 +1,6 @@
 package com.jmistri.rtsmp;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,12 +16,19 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-import org.bukkit.Color;
+
+import javax.xml.stream.events.Namespace;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class XPBottle implements Listener {
+
+    NamespacedKey key;
+
+    public XPBottle(NamespacedKey key) {
+        this.key = key;
+    }
 
     @EventHandler
     public void onXPChange(PlayerExpChangeEvent event) {
@@ -63,7 +68,7 @@ public class XPBottle implements Listener {
                 getBottle(player.getInventory(), mainHand).setAmount(getBottle(player.getInventory(), mainHand).getAmount() - 1);
 
                 // Create XP bottles
-                ItemStack newXPBottle = new ItemStack(Material.EXP_BOTTLE, 1);
+                ItemStack newXPBottle = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
                 player.getInventory().addItem(newXPBottle);
                 XPGained -= 8;
 
@@ -75,7 +80,7 @@ public class XPBottle implements Listener {
                 ItemStack potion = new ItemStack(Material.POTION);
                 PotionMeta pm = (PotionMeta) potion.getItemMeta();
 
-                Glow glow = new Glow(100);
+                Glow glow = new Glow(key);
                 pm.addEnchant(glow, 1, true);
 
 
@@ -122,7 +127,7 @@ public class XPBottle implements Listener {
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.5F);
             } else {
                 // Add new item
-                ItemStack newXPBottle = new ItemStack(Material.EXP_BOTTLE, 1);
+                ItemStack newXPBottle = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
                 setBottle(player.getInventory(), mainHand, newXPBottle);
 
                 // Store remaining xp to add to player's bar

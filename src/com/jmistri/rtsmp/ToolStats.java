@@ -2,7 +2,7 @@ package com.jmistri.rtsmp;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -17,21 +17,22 @@ import java.util.List;
 public class ToolStats implements Listener {
     static ArrayList<Material> pickaxes = new ArrayList<>();
     static {
-        pickaxes.add(Material.WOOD_PICKAXE);
+        pickaxes.add(Material.WOODEN_PICKAXE);
         pickaxes.add(Material.STONE_PICKAXE);
-        pickaxes.add(Material.GOLD_PICKAXE);
+        pickaxes.add(Material.GOLDEN_PICKAXE);
         pickaxes.add(Material.IRON_PICKAXE);
         pickaxes.add(Material.DIAMOND_PICKAXE);
     }
 
     static ArrayList<Material> weapons = new ArrayList<>();
     static {
-        weapons.add(Material.WOOD_SWORD);
+        weapons.add(Material.WOODEN_SWORD);
         weapons.add(Material.STONE_SWORD);
-        weapons.add(Material.GOLD_SWORD);
+        weapons.add(Material.GOLDEN_SWORD);
         weapons.add(Material.IRON_SWORD);
         weapons.add(Material.DIAMOND_SWORD);
         weapons.add(Material.BOW);
+        weapons.add(Material.CROSSBOW);
     }
 
     static HashMap<Material, String> pickaxe_blocks = new HashMap<>();
@@ -43,7 +44,7 @@ public class ToolStats implements Listener {
         pickaxe_blocks.put(Material.GOLD_ORE, ChatColor.GOLD + "Gold Ore");
         pickaxe_blocks.put(Material.DIAMOND_ORE, ChatColor.AQUA + "Diamond Ore");
         pickaxe_blocks.put(Material.EMERALD_ORE, ChatColor.GREEN + "Emerald Ore");
-        pickaxe_blocks.put(Material.EMERALD_ORE, ChatColor.RED + "Quartz Ore");
+        pickaxe_blocks.put(Material.NETHER_QUARTZ_ORE, ChatColor.RED + "Quartz Ore");
     }
 
     static HashMap<EntityType, String> weapon_entities = new HashMap<>();
@@ -98,6 +99,21 @@ public class ToolStats implements Listener {
         weapon_entities.put(EntityType.PARROT, ChatColor.DARK_RED + "Parrot");
         weapon_entities.put(EntityType.VILLAGER, ChatColor.GOLD + "Villager");
         weapon_entities.put(EntityType.PLAYER, ChatColor.RED + "Player");
+        weapon_entities.put(EntityType.TURTLE, ChatColor.DARK_GREEN + "Turtle");
+        weapon_entities.put(EntityType.PHANTOM, ChatColor.DARK_BLUE + "Phantom");
+        weapon_entities.put(EntityType.COD, ChatColor.GOLD + "Cod");
+        weapon_entities.put(EntityType.SALMON, ChatColor.LIGHT_PURPLE + "Salmon");
+        weapon_entities.put(EntityType.PUFFERFISH, ChatColor.YELLOW + "Puffer Fish");
+        weapon_entities.put(EntityType.TROPICAL_FISH, ChatColor.RED + "Tropical Fish");
+        weapon_entities.put(EntityType.DROWNED, ChatColor.DARK_AQUA + "Drowned");
+        weapon_entities.put(EntityType.DOLPHIN, ChatColor.BLUE + "Dolphin");
+        weapon_entities.put(EntityType.CAT, ChatColor.GOLD + "Cat");
+        weapon_entities.put(EntityType.PANDA, ChatColor.WHITE + "Panda");
+        weapon_entities.put(EntityType.PILLAGER, ChatColor.GRAY + "Pillager");
+        weapon_entities.put(EntityType.RAVAGER, ChatColor.DARK_GRAY + "Ravager");
+        weapon_entities.put(EntityType.TRADER_LLAMA, ChatColor.WHITE + "Trader Llama");
+        weapon_entities.put(EntityType.WANDERING_TRADER, ChatColor.BLUE + "Wandering Trader");
+        weapon_entities.put(EntityType.FOX, ChatColor.GOLD + "Fox");
     }
 
     @EventHandler
