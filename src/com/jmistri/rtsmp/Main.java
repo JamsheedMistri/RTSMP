@@ -25,6 +25,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ZombieVillagerSpawner(), this);
         getServer().getPluginManager().registerEvents(new XPBottle(key), this);
         getServer().getPluginManager().registerEvents(new XPBucket(key), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerCommandPreprocessEventListener(),this);
 
         ItemStack bucket = new ItemStack(Material.BUCKET);
         ItemMeta im = bucket.getItemMeta();
