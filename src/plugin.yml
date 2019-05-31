@@ -3,3 +3,7 @@ version: 1.0
 author: Mistri
 main: com.jmistri.rtsmp.Main
 api-version: 1.14
+commands:
+   ping:
+      description: Get the ping of a player
+      usage: /ping

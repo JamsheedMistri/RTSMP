@@ -26,6 +26,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new XPBottle(key), this);
         getServer().getPluginManager().registerEvents(new XPBucket(key), this);
         Bukkit.getPluginManager().registerEvents(new PlayerCommandPreprocessEventListener(),this);
+        this.getCommand("ping").setExecutor(new PingCommand());
 
         ItemStack bucket = new ItemStack(Material.BUCKET);
         ItemMeta im = bucket.getItemMeta();
