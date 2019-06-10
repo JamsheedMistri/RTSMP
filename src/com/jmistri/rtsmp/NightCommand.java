@@ -8,23 +8,25 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class PingCommand implements CommandExecutor {
+public class NightCommand implements CommandExecutor {
+
+    Main main;
+
+    public NightCommand(Main main) {
+        this.main = main;
+    }
+
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            int ping = -1;
-
-            try {
-                Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
-                ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {
-                e.printStackTrace();
+            if (!main.isCountingDown) {
+                player.sendMessage(ChatColor.RED + "There is currently no request! You can request the world to change to daytime by doing /day.");
+            } else {
+                main.disagree = true;
             }
-
-            player.sendMessage(ChatColor.RED + "Your Ping: " + ChatColor.WHITE + (ping == -1 ? "Error retrieving ping." : ping + "ms"));
 
             return true;
         } else {

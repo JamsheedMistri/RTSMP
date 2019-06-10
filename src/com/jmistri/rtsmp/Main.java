@@ -2,6 +2,7 @@ package com.jmistri.rtsmp;
 
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,6 +14,12 @@ import java.util.List;
 
 public class Main extends JavaPlugin {
     NamespacedKey key;
+
+    // Day/Night command variables
+    boolean isCountingDown = false;
+    int countdown = 10;
+    boolean disagree = false;
+    Player initiator;
 
     @Override
     public void onEnable() {
@@ -27,6 +34,8 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new XPBucket(key), this);
         Bukkit.getPluginManager().registerEvents(new PlayerCommandPreprocessEventListener(),this);
         this.getCommand("ping").setExecutor(new PingCommand());
+        this.getCommand("day").setExecutor(new DayCommand(this));
+        this.getCommand("night").setExecutor(new NightCommand(this));
 
         ItemStack bucket = new ItemStack(Material.BUCKET);
         ItemMeta im = bucket.getItemMeta();

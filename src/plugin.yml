@@ -7,3 +7,9 @@ commands:
    ping:
       description: Get the ping of a player
       usage: /ping
+   day:
+      description: Start a countdown to set the game to daytime
+      usage: /day
+   night:
+      description: Cancel the daytime command countdown
+      usage: /night
