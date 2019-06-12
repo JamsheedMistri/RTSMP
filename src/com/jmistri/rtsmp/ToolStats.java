@@ -70,16 +70,16 @@ public class ToolStats implements Listener {
         weapon_entities.put(EntityType.SLIME, ChatColor.GREEN + "Slime");
         weapon_entities.put(EntityType.GHAST, ChatColor.WHITE + "Ghast");
         weapon_entities.put(EntityType.PIG_ZOMBIE, ChatColor.LIGHT_PURPLE + "Zombie Pigman");
-        weapon_entities.put(EntityType.ENDERMAN, ChatColor.DARK_PURPLE + "Enderman");
+        weapon_entities.put(EntityType.ENDERMAN, ChatColor.RESET.toString() + ChatColor.DARK_PURPLE.toString() + "Enderman");
         weapon_entities.put(EntityType.CAVE_SPIDER, ChatColor.DARK_RED + "Spider");
         weapon_entities.put(EntityType.SILVERFISH, ChatColor.GRAY + "Silverfish");
         weapon_entities.put(EntityType.BLAZE, ChatColor.GOLD + "Blaze");
         weapon_entities.put(EntityType.MAGMA_CUBE, ChatColor.RED + "Magma Cube");
-        weapon_entities.put(EntityType.ENDER_DRAGON, ChatColor.DARK_PURPLE + "Ender Dragon");
+        weapon_entities.put(EntityType.ENDER_DRAGON, ChatColor.RESET.toString() + ChatColor.DARK_PURPLE.toString() + "Ender Dragon");
         weapon_entities.put(EntityType.WITHER, ChatColor.DARK_GRAY + "Wither");
         weapon_entities.put(EntityType.BAT, ChatColor.DARK_GRAY + "Bat");
-        weapon_entities.put(EntityType.WITCH, ChatColor.DARK_PURPLE + "Witch");
-        weapon_entities.put(EntityType.ENDERMITE, ChatColor.DARK_PURPLE + "Endermite");
+        weapon_entities.put(EntityType.WITCH, ChatColor.RESET.toString() + ChatColor.DARK_PURPLE.toString() + "Witch");
+        weapon_entities.put(EntityType.ENDERMITE, ChatColor.RESET.toString() + ChatColor.DARK_PURPLE.toString() + "Endermite");
         weapon_entities.put(EntityType.GUARDIAN, ChatColor.DARK_AQUA + "Guardian");
         weapon_entities.put(EntityType.SHULKER, ChatColor.AQUA + "Shulker");
         weapon_entities.put(EntityType.PIG, ChatColor.LIGHT_PURPLE + "Pig");
@@ -189,6 +189,14 @@ public class ToolStats implements Listener {
                     for (int j = 0; j < brokenLore.length - 2; j++) {
                         match += brokenLore[j];
                         if (j != brokenLore.length - 3) match += " ";
+                    }
+
+                    // Fix old bug. TODO: remove in a few days
+                    if (match.equals("Enderman") ||
+                            match.equals("Ender Dragon") ||
+                            match.equals("Witch") ||
+                            match.equals("Endermite")) {
+                        lore.remove(i);
                     }
 
                     if (weapon_entities.get(event.getEntityType()).equals(match)) {
