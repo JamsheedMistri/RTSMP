@@ -31,6 +31,8 @@ public class DayCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "You cannot use this command during the day!");
             } else if (main.isCountingDown) {
                 player.sendMessage(ChatColor.RED + "There is already a request going on!");
+            } else if (!player.isSleeping()) {
+                player.sendMessage(ChatColor.RED + "You cannot use this command unless you are in a bed!");
             } else {
                 List<Player> players = player.getWorld().getPlayers();
                 main.countdown = 10;
