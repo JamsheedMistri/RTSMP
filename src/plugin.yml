@@ -2,7 +2,7 @@ name: RTSMP
 version: 1.0
 author: Mistri
 main: com.jmistri.rtsmp.Main
-api-version: 1.14
+api-version: 1.15
 commands:
    ping:
       description: Get the ping of a player
@@ -13,3 +13,6 @@ commands:
    night:
       description: Cancel the daytime command countdown
       usage: /night
+   add:
+      description: Add user to whitelist
+      usage: /add <username>

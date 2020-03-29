@@ -27,8 +27,8 @@ public class DayCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            if (player.getWorld().getTime() < 12000) {
-                player.sendMessage(ChatColor.RED + "You cannot use this command during the day!");
+            if (player.getWorld().getTime() < 12000 && !player.getWorld().isThundering()) {
+                player.sendMessage(ChatColor.RED + "You cannot use this command during the day or when it is not thundering!");
             } else if (main.isCountingDown) {
                 player.sendMessage(ChatColor.RED + "There is already a request going on!");
             } else if (!player.isSleeping()) {
@@ -41,7 +41,7 @@ public class DayCommand implements CommandExecutor {
                 main.disagree = false;
 
                 for (Player p : players) {
-                    p.sendMessage(ChatColor.GOLD + player.getName() + ChatColor.GRAY + " wants to change the server time to day! " + ChatColor.GOLD + "Do /night in the next 10 to cancel his request.");
+                    p.sendMessage(ChatColor.GOLD + player.getName() + ChatColor.GRAY + " wants to change the server time to day and remove thunderstorms! " + ChatColor.GOLD + "Do /night in the next 10 to cancel his request.");
                 }
 
                 taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("RTSMP"), new DaytimeCountdown(this), 20L, 20);

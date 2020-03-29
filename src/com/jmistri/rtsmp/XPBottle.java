@@ -32,58 +32,52 @@ public class XPBottle implements Listener {
 
     @EventHandler
     public void onXPChange(PlayerExpChangeEvent event) {
-
-        // Event information
         Player player = event.getPlayer();
-        boolean mainHand;
-        boolean refill = false;
+        boolean isInMainHand;
+        boolean isRefill = false;
 
         if (player.getInventory().getItemInMainHand().getType().equals(Material.GLASS_BOTTLE)) {
-            mainHand = true;
+            isInMainHand = true;
         } else if (player.getInventory().getItemInOffHand().getType().equals(Material.GLASS_BOTTLE)) {
-            mainHand = false;
+            isInMainHand = false;
         } else if (player.getInventory().getItemInMainHand().getType().equals(Material.POTION)) {
-            mainHand = true;
-            refill = true;
+            isInMainHand = true;
+            isRefill = true;
         } else if (player.getInventory().getItemInOffHand().getType().equals(Material.POTION)) {
-            mainHand = false;
-            refill = true;
+            isInMainHand = false;
+            isRefill = true;
         } else {
             return;
         }
 
-        // Either Stack of bottles or partially full
-        List<String> lore = getBottle(player.getInventory(), mainHand).getItemMeta().getLore();
-        int remainingXP = 0;
+        List<String> lore = getItemInHand(player.getInventory(), isInMainHand).getItemMeta().getLore();
+        int finalAmount;
 
-        if (!refill) {
-            // Glass Bottles (no Lore)
-
+        if (!isRefill) {
             List<String> replacementLore = new ArrayList<>();
             int XPGained = event.getAmount();
 
-            // Subtract XP and create new bottles until there isnt enough to create a full bottle
-            while (XPGained >= 8 && getBottle(player.getInventory(), mainHand).getAmount() > 0) {
-                // Remove one item from main hand
-                getBottle(player.getInventory(), mainHand).setAmount(getBottle(player.getInventory(), mainHand).getAmount() - 1);
+            // Subtract XP and create new bottles until there isn't enough to create a full bottle
+            while (XPGained >= 8 && getItemInHand(player.getInventory(), isInMainHand).getAmount() > 0) {
+                // Remove one item from hand
+                getItemInHand(player.getInventory(), isInMainHand).setAmount(getItemInHand(player.getInventory(), isInMainHand).getAmount() - 1);
 
                 // Create XP bottles
                 ItemStack newXPBottle = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
                 player.getInventory().addItem(newXPBottle);
                 XPGained -= 8;
 
-                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 0.5F);
+                // Play sound to signify the finish of a bucket
+                playFinishBucketSound(player);
             }
 
             // Create a partially filled bottle if there is remaining XP
-            if (XPGained > 0 && getBottle(player.getInventory(), mainHand).getAmount() > 0) {
+            if (XPGained > 0 && getItemInHand(player.getInventory(), isInMainHand).getAmount() > 0) {
                 ItemStack potion = new ItemStack(Material.POTION);
                 PotionMeta pm = (PotionMeta) potion.getItemMeta();
 
                 Glow glow = new Glow(key);
                 pm.addEnchant(glow, 1, true);
-
-
                 pm.setColor(Color.LIME);
 
                 // Create a partially filled bottle
@@ -95,9 +89,9 @@ public class XPBottle implements Listener {
                 pm.setDisplayName(ChatColor.RESET + "Partially Filled XP Bottle");
                 potion.setItemMeta(pm);
 
-                int bottlesRemaining = getBottle(player.getInventory(), mainHand).getAmount() - 1;
+                int bottlesRemaining = getItemInHand(player.getInventory(), isInMainHand).getAmount() - 1;
 
-                setBottle(player.getInventory(), mainHand, potion);
+                setItemInHand(player.getInventory(), isInMainHand, potion);
 
                 // Add the replacement bottle
                 if (bottlesRemaining > 0) {
@@ -106,68 +100,58 @@ public class XPBottle implements Listener {
 
                 XPGained = 0;
 
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.5F);
+                // Play partial XP pickup sound
+                playPartialBucketSound(player);
             }
 
-            remainingXP = XPGained;
+            finalAmount = XPGained;
         } else {
             // Partially filled bottles (contain lore)
             String[] brokenLore = lore.get(0).split(" ");
 
             int amountStored = Integer.parseInt(brokenLore[brokenLore.length - 1]);
-
-            if (event.getAmount() + amountStored <= 7) {
+            if (event.getAmount() + amountStored < 8) {
                 lore.set(0, ChatColor.GRAY + "Experience " + ChatColor.DARK_GRAY + "-" + ChatColor.GREEN + " " + (amountStored + event.getAmount()));
 
                 // Write lore data to partially filled bottle
-                ItemMeta im = getBottle(player.getInventory(), mainHand).getItemMeta();
+                ItemMeta im = getItemInHand(player.getInventory(), isInMainHand).getItemMeta();
                 im.setLore(lore);
-                getBottle(player.getInventory(), mainHand).setItemMeta(im);
+                getItemInHand(player.getInventory(), isInMainHand).setItemMeta(im);
 
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.5F);
+                finalAmount = 0;
+
+                // Play partial XP pickup sound
+                playPartialBucketSound(player);
             } else {
                 // Add new item
                 ItemStack newXPBottle = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-                setBottle(player.getInventory(), mainHand, newXPBottle);
+                setItemInHand(player.getInventory(), isInMainHand, newXPBottle);
 
                 // Store remaining xp to add to player's bar
-                remainingXP = event.getAmount() - 8 + amountStored;
+                finalAmount = event.getAmount() + amountStored - 8;
 
-                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 0.5F);
+                // Play sound to signify the finish of a bucket
+                playFinishBucketSound(player);
             }
         }
 
         player.updateInventory();
-
-        int currentXP = player.getTotalExperience();
-        if (currentXP - event.getAmount() > 0) {
-            setActualXP(player, currentXP - event.getAmount() + remainingXP);
-        } else {
-            setActualXP(player, remainingXP);
-        }
+        event.setAmount(finalAmount);
     }
 
-    private void setActualXP(Player player, int XP) {
-        // Reset player's XP
-        player.setTotalExperience(XP);
-        player.setLevel(0);
-        player.setExp(0);
-
-        // For each level, subtract XP and add a level
-        while (XP > player.getExpToLevel()) {
-            XP -= player.getExpToLevel();
-            player.setLevel(player.getLevel() + 1);
-        }
-
-        // Add remaining XP
-        player.setExp((float) XP / (float) player.getExpToLevel());
+    private void playFinishBucketSound(Player player) {
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 0.25F);
     }
 
-    private ItemStack getBottle(PlayerInventory inventory, boolean mainHand) {
+    private void playPartialBucketSound(Player player) {
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.25F);
+    }
+
+    private ItemStack getItemInHand(PlayerInventory inventory, boolean mainHand) {
         return mainHand ? inventory.getItemInMainHand() : inventory.getItemInOffHand();
     }
 
-    private void setBottle(PlayerInventory inventory, boolean mainHand, ItemStack item) {
+    private void setItemInHand(PlayerInventory inventory, boolean mainHand, ItemStack item) {
         if (mainHand) {
             inventory.setItemInMainHand(item);
         } else {

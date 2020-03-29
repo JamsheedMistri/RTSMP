@@ -36,6 +36,7 @@ public class Main extends JavaPlugin {
         this.getCommand("ping").setExecutor(new PingCommand());
         this.getCommand("day").setExecutor(new DayCommand(this));
         this.getCommand("night").setExecutor(new NightCommand(this));
+        this.getCommand("add").setExecutor(new AddCommand());
 
         ItemStack bucket = new ItemStack(Material.BUCKET);
         ItemMeta im = bucket.getItemMeta();

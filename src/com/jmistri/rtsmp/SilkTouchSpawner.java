@@ -1,13 +1,12 @@
 package com.jmistri.rtsmp;
 
-import de.tr7zw.itemnbtapi.NBTItem;
+import de.tr7zw.nbtapi.NBTItem;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

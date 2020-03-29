@@ -16,7 +16,7 @@ public class DaytimeCountdown implements Runnable {
     public void run() {
         if (command.main.disagree) {
             for (Player p : command.main.initiator.getWorld().getPlayers()) {
-                p.sendMessage(ChatColor.GOLD + "Someone has voted to continue through the night.");
+                p.sendMessage(ChatColor.GOLD + "Someone has voted to continue through the night or thunderstorm.");
             }
 
             command.main.isCountingDown = false;
@@ -24,10 +24,11 @@ public class DaytimeCountdown implements Runnable {
             Bukkit.getServer().getScheduler().cancelTask(command.taskID);
         } else if (command.main.countdown <= 0) {
             for (Player p : command.main.initiator.getWorld().getPlayers()) {
-                p.sendMessage(ChatColor.GOLD + "Everyone has agreed to skip the night.");
+                p.sendMessage(ChatColor.GOLD + "Everyone has agreed to skip the night or thunderstorm.");
             }
 
             command.main.initiator.getWorld().setTime(0);
+            command.main.initiator.getWorld().setThundering(false);
             command.main.isCountingDown = false;
 
             Bukkit.getServer().getScheduler().cancelTask(command.taskID);
