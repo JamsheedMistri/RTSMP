@@ -1,4 +1,4 @@
-package com.jmistri.rtsmp;
+package com.jmistri.rtsmp.listeners;
 
 import de.tr7zw.nbtapi.NBTItem;
 import org.apache.commons.lang.WordUtils;

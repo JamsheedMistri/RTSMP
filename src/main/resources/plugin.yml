@@ -1,0 +1,18 @@
+name: RTSMP
+version: 1.2
+author: Mistri
+main: com.jmistri.rtsmp.SMPPlugin
+api-version: 1.15
+commands:
+  ping:
+    description: Get the ping of a player
+    usage: /ping
+  day:
+    description: Start a countdown to set the game to daytime
+    usage: /day
+  night:
+    description: Cancel the daytime command countdown
+    usage: /night
+  add:
+    description: Add user to whitelist
+    usage: /add <username>

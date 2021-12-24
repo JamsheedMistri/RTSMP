@@ -1,5 +1,6 @@
-package com.jmistri.rtsmp;
+package com.jmistri.rtsmp.listeners;
 
+import com.jmistri.rtsmp.util.Glow;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -14,10 +15,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XPBucket implements Listener {
+public class XPBucketListener implements Listener {
     NamespacedKey key;
 
-    public XPBucket(NamespacedKey key) {
+    public XPBucketListener(NamespacedKey key) {
         this.key = key;
     }
 
@@ -86,7 +87,7 @@ public class XPBucket implements Listener {
                 // Play partial XP pickup sound
                 playPartialBucketSound(player);
             }
-        // Partially filled buckets (contain lore)
+            // Partially filled buckets (contain lore)
         } else {
             String[] brokenLore = lore.get(0).split(" ");
             // Amount stored in the bucket already

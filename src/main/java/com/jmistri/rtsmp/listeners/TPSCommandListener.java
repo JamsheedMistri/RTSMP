@@ -1,14 +1,14 @@
-package com.jmistri.rtsmp;
+package com.jmistri.rtsmp.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_15_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_18_R1.CraftServer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-public class PlayerCommandPreprocessEventListener implements Listener {
+public class TPSCommandListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPreCommand(PlayerCommandPreprocessEvent e) {

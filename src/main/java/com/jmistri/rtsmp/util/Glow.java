@@ -1,4 +1,4 @@
-package com.jmistri.rtsmp;
+package com.jmistri.rtsmp.util;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;

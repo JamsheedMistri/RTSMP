@@ -1,4 +1,4 @@
-package com.jmistri.rtsmp;
+package com.jmistri.rtsmp.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ToolStats implements Listener {
+public class ToolStatsListener implements Listener {
     static ArrayList<Material> pickaxes = new ArrayList<>();
     static {
         pickaxes.add(Material.WOODEN_PICKAXE);
@@ -22,6 +22,7 @@ public class ToolStats implements Listener {
         pickaxes.add(Material.GOLDEN_PICKAXE);
         pickaxes.add(Material.IRON_PICKAXE);
         pickaxes.add(Material.DIAMOND_PICKAXE);
+        pickaxes.add(Material.NETHERITE_PICKAXE);
     }
 
     static ArrayList<Material> weapons = new ArrayList<>();
@@ -31,6 +32,7 @@ public class ToolStats implements Listener {
         weapons.add(Material.GOLDEN_SWORD);
         weapons.add(Material.IRON_SWORD);
         weapons.add(Material.DIAMOND_SWORD);
+        weapons.add(Material.NETHERITE_SWORD);
         weapons.add(Material.BOW);
         weapons.add(Material.CROSSBOW);
     }
@@ -45,6 +47,8 @@ public class ToolStats implements Listener {
         pickaxe_blocks.put(Material.DIAMOND_ORE, ChatColor.AQUA + "Diamond Ore");
         pickaxe_blocks.put(Material.EMERALD_ORE, ChatColor.GREEN + "Emerald Ore");
         pickaxe_blocks.put(Material.NETHER_QUARTZ_ORE, ChatColor.RED + "Quartz Ore");
+        pickaxe_blocks.put(Material.COPPER_ORE, ChatColor.GOLD + "Copper Ore");
+        pickaxe_blocks.put(Material.ANCIENT_DEBRIS, ChatColor.DARK_PURPLE + "Ancient Debris");
     }
 
     static HashMap<EntityType, String> weapon_entities = new HashMap<>();
@@ -69,7 +73,9 @@ public class ToolStats implements Listener {
         weapon_entities.put(EntityType.ZOMBIE, ChatColor.DARK_GREEN + "Zombie");
         weapon_entities.put(EntityType.SLIME, ChatColor.GREEN + "Slime");
         weapon_entities.put(EntityType.GHAST, ChatColor.WHITE + "Ghast");
-        weapon_entities.put(EntityType.PIG_ZOMBIE, ChatColor.LIGHT_PURPLE + "Zombie Pigman");
+        weapon_entities.put(EntityType.PIGLIN, ChatColor.LIGHT_PURPLE + "Piglin");
+        weapon_entities.put(EntityType.ZOMBIFIED_PIGLIN, ChatColor.LIGHT_PURPLE + "Zombified Piglin");
+        weapon_entities.put(EntityType.PIGLIN_BRUTE, ChatColor.LIGHT_PURPLE + "Piglin Brute");
         weapon_entities.put(EntityType.ENDERMAN, ChatColor.RESET.toString() + ChatColor.DARK_PURPLE.toString() + "Enderman");
         weapon_entities.put(EntityType.CAVE_SPIDER, ChatColor.DARK_RED + "Spider");
         weapon_entities.put(EntityType.SILVERFISH, ChatColor.GRAY + "Silverfish");
@@ -114,6 +120,13 @@ public class ToolStats implements Listener {
         weapon_entities.put(EntityType.TRADER_LLAMA, ChatColor.WHITE + "Trader Llama");
         weapon_entities.put(EntityType.WANDERING_TRADER, ChatColor.BLUE + "Wandering Trader");
         weapon_entities.put(EntityType.FOX, ChatColor.GOLD + "Fox");
+        weapon_entities.put(EntityType.BEE, ChatColor.YELLOW + "Bee");
+        weapon_entities.put(EntityType.HOGLIN, ChatColor.LIGHT_PURPLE + "Hoglin");
+        weapon_entities.put(EntityType.STRIDER, ChatColor.RED + "Strider");
+        weapon_entities.put(EntityType.ZOGLIN, ChatColor.LIGHT_PURPLE + "Zoglin");
+        weapon_entities.put(EntityType.GLOW_SQUID, ChatColor.AQUA + "Glow Squid");
+        weapon_entities.put(EntityType.AXOLOTL, ChatColor.LIGHT_PURPLE + "Axolotl");
+        weapon_entities.put(EntityType.GOAT, ChatColor.WHITE + "Goat");
     }
 
     @EventHandler
@@ -189,14 +202,6 @@ public class ToolStats implements Listener {
                     for (int j = 0; j < brokenLore.length - 2; j++) {
                         match += brokenLore[j];
                         if (j != brokenLore.length - 3) match += " ";
-                    }
-
-                    // Fix old bug. TODO: remove in a few days
-                    if (match.equals("Enderman") ||
-                            match.equals("Ender Dragon") ||
-                            match.equals("Witch") ||
-                            match.equals("Endermite")) {
-                        lore.remove(i);
                     }
 
                     if (weapon_entities.get(event.getEntityType()).equals(match)) {

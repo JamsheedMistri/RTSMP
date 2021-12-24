@@ -1,50 +1,45 @@
-package com.jmistri.rtsmp;
+package com.jmistri.rtsmp.commands;
 
+import com.jmistri.rtsmp.SMPPlugin;
+import com.jmistri.rtsmp.managers.CountdownManager;
+import com.jmistri.rtsmp.tasks.DaytimeCountdownTask;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DayCommand implements CommandExecutor {
 
-    Main main;
-    int taskID;
+    public int taskID;
+    private SMPPlugin plugin;
+    private CountdownManager countdownManager;
 
-    public DayCommand(Main main) {
-        this.main = main;
+    public DayCommand(SMPPlugin plugin, CountdownManager countdownManager) {
+        this.plugin = plugin;
+        this.countdownManager = countdownManager;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-
+        if (sender instanceof Player player) {
             if (player.getWorld().getTime() < 12000 && !player.getWorld().isThundering()) {
                 player.sendMessage(ChatColor.RED + "You cannot use this command during the day or when it is not thundering!");
-            } else if (main.isCountingDown) {
+            } else if (countdownManager.isCountingDown()) {
                 player.sendMessage(ChatColor.RED + "There is already a request going on!");
             } else if (!player.isSleeping()) {
                 player.sendMessage(ChatColor.RED + "You cannot use this command unless you are in a bed!");
             } else {
                 List<Player> players = player.getWorld().getPlayers();
-                main.countdown = 10;
-                main.initiator = player;
-                main.isCountingDown = true;
-                main.disagree = false;
+                countdownManager.initiateCountdown(player);
 
                 for (Player p : players) {
-                    p.sendMessage(ChatColor.GOLD + player.getName() + ChatColor.GRAY + " wants to change the server time to day and remove thunderstorms! " + ChatColor.GOLD + "Do /night in the next 10 to cancel his request.");
+                    p.sendMessage(ChatColor.GOLD + player.getName() + ChatColor.GRAY + " wants to change the server time to day and remove thunderstorms! " + ChatColor.GOLD + "Do /night in the next 10 seconds to cancel his request.");
                 }
 
-                taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("RTSMP"), new DaytimeCountdown(this), 20L, 20);
+                taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new DaytimeCountdownTask(countdownManager, this), 20, 20);
             }
 
             return true;

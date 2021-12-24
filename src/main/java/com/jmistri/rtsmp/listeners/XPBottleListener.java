@@ -1,32 +1,24 @@
-package com.jmistri.rtsmp;
+package com.jmistri.rtsmp.listeners;
 
+import com.jmistri.rtsmp.util.Glow;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerExpChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
-
-import javax.xml.stream.events.Namespace;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XPBottle implements Listener {
+public class XPBottleListener implements Listener {
 
     NamespacedKey key;
 
-    public XPBottle(NamespacedKey key) {
+    public XPBottleListener(NamespacedKey key) {
         this.key = key;
     }
 

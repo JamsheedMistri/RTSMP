@@ -1,43 +1,27 @@
-package com.jmistri.rtsmp;
+package com.jmistri.rtsmp.managers;
 
-import org.bukkit.*;
+import com.jmistri.rtsmp.util.Glow;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main extends JavaPlugin {
+public class XPBottleBucketManager {
     NamespacedKey key;
 
-    // Day/Night command variables
-    boolean isCountingDown = false;
-    int countdown = 10;
-    boolean disagree = false;
-    Player initiator;
+    public XPBottleBucketManager(NamespacedKey key) {
+        this.key = key;
+    }
 
-    @Override
-    public void onEnable() {
-        key = new NamespacedKey(this, this.getDescription().getName());
-
-        registerGlow();
-        getServer().getPluginManager().registerEvents(new ChatListener(), this);
-        getServer().getPluginManager().registerEvents(new SilkTouchSpawner(), this);
-        getServer().getPluginManager().registerEvents(new ToolStats(), this);
-        getServer().getPluginManager().registerEvents(new ZombieVillagerSpawner(), this);
-        getServer().getPluginManager().registerEvents(new XPBottle(key), this);
-        getServer().getPluginManager().registerEvents(new XPBucket(key), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerCommandPreprocessEventListener(),this);
-        this.getCommand("ping").setExecutor(new PingCommand());
-        this.getCommand("day").setExecutor(new DayCommand(this));
-        this.getCommand("night").setExecutor(new NightCommand(this));
-        this.getCommand("add").setExecutor(new AddCommand());
-
+    public void createRecipes() {
         ItemStack bucket = new ItemStack(Material.BUCKET);
         ItemMeta im = bucket.getItemMeta();
         List<String> lore = new ArrayList<>();
@@ -60,11 +44,6 @@ public class Main extends JavaPlugin {
         Bukkit.addRecipe(recipe);
     }
 
-    @Override
-    public void onDisable() {
-
-    }
-
     public void registerGlow() {
         try {
             Field f = Enchantment.class.getDeclaredField("acceptingNew");
@@ -74,12 +53,12 @@ public class Main extends JavaPlugin {
         catch (Exception e) {
             e.printStackTrace();
         }
+
         try {
             Glow glow = new Glow(key);
             Enchantment.registerEnchantment(glow);
         }
-        catch (IllegalArgumentException e){
-        }
+        catch (IllegalArgumentException e) {}
         catch (Exception e) {
             e.printStackTrace();
         }
